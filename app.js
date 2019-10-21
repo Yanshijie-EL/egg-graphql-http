@@ -1,5 +1,4 @@
 'use strict';
-const { graphqlKoa } = require('apollo-server-koa/dist/koaApollo');
 const { resolveGraphiQLString } = require('apollo-server-module-graphiql');
 
 /*
@@ -7,30 +6,41 @@ const { resolveGraphiQLString } = require('apollo-server-module-graphiql');
  * @return {Promise} The result of the graphiqlKoa.
  */
 function graphiqlKoa(options) {
- return ctx => {
-   const query = ctx.request.query;
-   return resolveGraphiQLString(query, options, ctx)
-     .then(graphiqlString => {
-       ctx.set('Content-Type', 'text/html');
-       ctx.body = graphiqlString;
-     });
- };
+  return ctx => {
+    const query = ctx.request.query;
+    return resolveGraphiQLString(query, options, ctx)
+      .then(graphiqlString => {
+        ctx.set('Content-Type', 'text/html');
+        ctx.body = graphiqlString;
+      });
+  };
 }
 
 module.exports = app => {
+  require('./lib/load_directive')(app);
+  require('./lib/load_resolver')(app);
   require('./lib/load_schema')(app);
-  require('./lib/load_connector')(app);
 
-  const { router } = app;  
+
+  const { router } = app;
   const options = app.config.graphqlHttp;
   const graphQLRouter = options.router;
 
-  const {} = app.config.graphqlHttp
-  router.all(graphQLRouter, function (ctx) {
-    return graphqlKoa({
-      schema: this.app.schema,
-      context: ctx,
-    })(ctx);
+  router.post(graphQLRouter, async function (ctx) {
+
+    let params = {
+      query: ctx.params.query ? ctx.params.query : null,
+      variables: ctx.params.variables ? ctx.params.variables : null,
+      operationName: ctx.params.operationName ? ctx.params.operationName : null
+    }
+
+    if (!params.query && ctx.request.body.query) params.query = ctx.request.body.query ? ctx.request.body.query : null
+
+    if (!params.variables && ctx.request.body.variables) params.variables = ctx.request.body.variables ? ctx.request.body.variables : null
+
+    if (!params.operationName && ctx.request.body.operationName) params.operationName = ctx.request.body.operationName ? ctx.request.body.operationName : null
+
+    ctx.body = await ctx.graphql.query(params);
   });
 
   if (options.graphiql === true) {

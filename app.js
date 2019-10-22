@@ -30,7 +30,10 @@ module.exports = app => {
 
   if (options.graphiql === true) {
     router.all('/graphiql', GraphqlPG({
-        endpoint: graphQLRouter
+        endpoint: graphQLRouter,
+        setting:{
+          'schema.polling.enable':false
+        }
     }));
   }
 

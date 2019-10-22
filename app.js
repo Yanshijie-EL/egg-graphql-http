@@ -30,7 +30,7 @@ module.exports = app => {
 
   if (options.graphiql === true) {
     router.all('/graphiql', GraphqlPG({
-        endpointURL: graphQLRouter
+        endpoint: graphQLRouter
     }));
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "egg-graphql-http",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "with egg-graphql, to make middleware like error handler and authorization  easy",
   "eggPlugin": {
     "name": "graphqlHttp"

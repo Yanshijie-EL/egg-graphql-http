@@ -1,5 +1,5 @@
 'use strict';
-const GraphqlPG = require('graphql-playground-middleware-koa');
+const GraphqlPG = require('graphql-playground-middleware-koa').default;
 
 module.exports = app => {
   require('./lib/load_directive')(app);

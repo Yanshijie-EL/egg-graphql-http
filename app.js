@@ -14,9 +14,9 @@ module.exports = app => {
   router.post(graphQLRouter, async function (ctx) {
 
     let params = {
-      query: ctx.params.query ? ctx.params.query : null,
-      variables: ctx.params.variables ? ctx.params.variables : null,
-      operationName: ctx.params.operationName ? ctx.params.operationName : null
+      query: ctx.params.query ? ctx.params.query : ctx.querys.query?ctx.querys.query:null,
+      variables: ctx.params.variables ? ctx.params.variables : ctx.querys.variables?ctx.querys.variables:null,
+      operationName: ctx.params.operationName ? ctx.params.operationName : ctx.querys.operationName?ctx.querys.varioperationNameables:null
     }
 
     if (!params.query && ctx.request.body.query) params.query = ctx.request.body.query ? ctx.request.body.query : null

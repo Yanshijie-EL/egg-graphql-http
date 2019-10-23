@@ -11,26 +11,25 @@ module.exports = app => {
   const options = app.config.graphqlHttp;
   const graphQLRouter = options.router;
 
-  router.post(graphQLRouter, async function (ctx) {
-
+  router.post(graphQLRouter, async function(ctx) {
     let params = {
-      query: ctx.params.query ? ctx.params.query : ctx.querys.query?ctx.querys.query:null,
-      variables: ctx.params.variables ? ctx.params.variables : ctx.querys.variables?ctx.querys.variables:null,
-      operationName: ctx.params.operationName ? ctx.params.operationName : ctx.querys.operationName?ctx.querys.varioperationNameables:null
-    }
+      query: ctx.params.query ? ctx.params.query : (ctx.query.query ? ctx.querys.query : null),
+      variables: ctx.params.variables ? ctx.params.variables : (ctx.query.variables ? ctx.querys.variables : null),
+      operationName: ctx.params.operationName ? ctx.params.operationName : (ctx.query.operationName ? ctx.querys.varioperationNameables : null),
+    };
 
-    if (!params.query && ctx.request.body.query) params.query = ctx.request.body.query ? ctx.request.body.query : null
+    if (!params.query && ctx.request.body.query) params.query = ctx.request.body.query ? ctx.request.body.query : null;
 
-    if (!params.variables && ctx.request.body.variables) params.variables = ctx.request.body.variables ? ctx.request.body.variables : null
+    if (!params.variables && ctx.request.body.variables) params.variables = ctx.request.body.variables ? ctx.request.body.variables : null;
 
-    if (!params.operationName && ctx.request.body.operationName) params.operationName = ctx.request.body.operationName ? ctx.request.body.operationName : null
+    if (!params.operationName && ctx.request.body.operationName) params.operationName = ctx.request.body.operationName ? ctx.request.body.operationName : null;
 
     ctx.body = await ctx.graphql.query(params);
   });
 
   if (options.graphiql === true) {
     router.all('/graphiql', GraphqlPG({
-        endpoint: graphQLRouter
+      endpoint: graphQLRouter,
     }));
   }
 

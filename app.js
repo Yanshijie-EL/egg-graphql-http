@@ -13,7 +13,7 @@ module.exports = app => {
 
   router.post(graphQLRouter, async function(ctx) {
     let params = {
-      query: ctx.params.query ? ctx.params.query : (ctx.query.query ? ctx.query.appquery : null),
+      query: ctx.params.query ? ctx.params.query : (ctx.query.query ? ctx.query.query : null),
       variables: ctx.params.variables ? ctx.params.variables : (ctx.query.variables ? ctx.query.variables : null),
       operationName: ctx.params.operationName ? ctx.params.operationName : (ctx.query.operationName ? ctx.query.operationName : null),
     };
